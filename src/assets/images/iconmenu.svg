@@ -1,0 +1,8 @@
+<svg width="20" height="17" viewBox="0 0 20 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<line x1="1.13184" y1="2.00403" x2="19.1187" y2="2.00403" stroke="white" stroke-linecap="round"/>
+<rect x="3.43896" y="0.921509" width="3.77216" height="2.23772" rx="0.3" fill="white"/>
+<line x1="19.1265" y1="8.84973" x2="1.13957" y2="8.84973" stroke="white" stroke-linecap="round"/>
+<rect x="16.811" y="10.0099" width="3.77216" height="2.23772" rx="0.3" transform="rotate(-180 16.811 10.0099)" fill="white"/>
+<line x1="19.1265" y1="15.7003" x2="1.13957" y2="15.7003" stroke="white" stroke-linecap="round"/>
+<rect x="10.811" y="16.8605" width="3.77216" height="2.23772" rx="0.3" transform="rotate(-180 10.811 16.8605)" fill="white"/>
+</svg>

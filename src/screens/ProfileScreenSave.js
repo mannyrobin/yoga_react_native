@@ -1,0 +1,253 @@
+import * as WebBrowser from 'expo-web-browser';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
+import React, { Component } from 'react';
+import TabBarIcon from '../components/TabBarIcon';
+import {
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+    TextInput,
+    Linking,
+  Text,
+    TouchableHighlight,
+    ImageBackground,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import SvgUri from 'react-native-svg-uri';
+
+
+class ProfileScreenSave extends Component {
+  static navigationOptions =
+  {
+      headerStyle: {
+     display: 'none',
+    },
+  };
+  state = {
+
+  };
+
+
+  render() {
+    
+      const { search,  } = this.state;
+  
+      
+       return (
+            
+  <ImageBackground
+        style={styles.container}
+        source={require('../assets/images/studio.png')}
+        imageStyle={{ resizeMode: 'cover' }}
+      >
+ <ScrollView  style={styles.containerscrl} >
+     <View style={styles.container1}>
+           <View style={styles.header}> 
+              <View style={styles.arrowleft}>
+                 <Icon
+                    onPress={() => this.props.navigation.navigate('Profile')}
+                    name='chevron-left'
+                    size = {20}
+                    color='#fff'
+                />
+            <Text style={styles.textheader}>Как накопить споты?</Text>
+            </View>
+       </View>
+ 
+           <View style={styles.infowrap}> 
+               
+               <View style={styles.info}> 
+                   <View style={styles.inputwrap} >
+                        <Text style={styles.prosfileh2}>Возможности накопления спотов.</Text>
+                       
+            <View style={styles.wrapsave}>
+                            <Text style={styles.iconText}>1 </Text>   
+                            <Text style={styles.text} > За внесение полной информации
+в профиль о себе - <Text>15 спотов</Text></Text> 
+                        </View>
+              <View style={styles.wrapsave}>
+                            <Text style={styles.iconText}> 2</Text>   
+                            <Text style={styles.text}>При рекоменрации приложения
+друзьям - <Text>10 спотов</Text> </Text> 
+                        </View>
+     <View style={styles.wrapsave}>
+                            <Text style={styles.iconText}>3 </Text>   
+                            <Text style={styles.text}> Оставьте отзыв о студии
+и вы получите -<Text>25 спотов</Text></Text> 
+                        </View>
+     <View style={styles.wrapsave}>
+                            <Text  style={styles.iconText}> 4</Text>   
+                            <Text style={styles.text}>Чем больше вы ходите в студии
+и оставляете отзывов, тем больше баланс ваших спотов </Text> 
+                        </View>
+               </View>
+              </View>
+              </View>
+              
+              </View>
+                 
+ </ScrollView >
+          </ImageBackground >
+
+  ); 
+  }
+
+}
+
+
+export default ProfileScreenSave
+
+
+const styles = StyleSheet.create({
+  container: {
+ paddingTop: 10,
+  
+ textAlign: 'center',
+       flex: 1,
+  justifyContent: 'space-between',
+     
+   
+  },
+    textheader: {
+        color: "#fff",
+        fontSize: 17,
+        fontWeight: '600',
+        paddingLeft: 15
+    } ,
+  
+
+      container1: {
+ paddingTop: 10,
+ paddingBottom: 65,     
+ textAlign: 'center',
+       flex: 1,
+  justifyContent: 'space-between',
+     
+   
+  },
+iconText: {
+width: 35,
+    height: 35,
+    color: '#fff',
+    borderRadius: 100,
+    display: 'flex',
+    alignItems: 'center',
+        justifyContent: 'center',
+    backgroundColor: '#BABF97',
+},
+    text: {
+        width: '70%',
+      color: "#000",
+        fontSize: 12,
+        lineHeight: 22,
+      marginLeft: 11
+        
+    },
+    headersingleicon: {
+      marginRight: 25,  
+    },
+       containerscrl: {
+  flex: 1,
+  
+  
+  },
+    
+  headericon: {
+      display: 'flex',
+      
+        flex: 0.25,
+          flexDirection: 'row',
+      alignItems: 'center',
+        justifyContent: 'flex-end',
+},
+    
+      arrowleft: {
+          flex: 0.65,
+          flexDirection: 'row',
+      alignItems: 'center',
+        justifyContent: 'flex-start',
+    },
+    image: {
+     
+        flex: 0.3,
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+       
+    },
+
+    header: {
+        flex: 0.1,
+       top: 10,
+       width: '90%',
+        paddingLeft: 20,
+       
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+         alignItems: 'center',
+       backgroundColor: 'transparent'
+        
+    
+    },
+
+    
+    prosfileh2: {
+      
+           fontSize: 17,
+        fontWeight: '600',  
+    },
+    infowrap: {
+        paddingBottom: 30,
+        top: 50,
+        bottom: 20,
+        flex: 0.9,
+        width: '100%',
+        alignItems: 'center',
+       
+        textAlign: 'left',
+        justifyContent: 'center',
+    },
+
+
+  info: {
+       flexDirection: 'row',
+      marginTop: 20,
+      shadowColor: "#8d7b67",
+shadowOffset: {
+	width: 0,
+	height: 7,
+},
+shadowOpacity: 0.43,
+shadowRadius: 9.51,
+
+elevation: 15,
+      padding: 20,
+      paddingTop: 0,
+      paddingBottom: 0,
+      paddingRight: 0,
+      width: "90%",
+      backgroundColor: '#fff',
+      borderRadius: 20
+    },
+
+inputwrap: {
+    width: '100%',
+    paddingBottom: 15,
+     marginTop: 10 ,
+      alignItems: 'flex-start',
+},
+wrapsave: {
+    marginTop: 18,
+      flex: 0.1,
+       top: 20,
+    bottom: 20,
+       width: '100%',
+        flexDirection: 'row',
+         alignItems: 'center',
+       backgroundColor: 'transparent'
+},
+   
+});
