@@ -8,14 +8,22 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-    TextInput,
+ TextInput,
   Text,
-    TouchableHighlight,
-    ImageBackground,
+Linking,
+TouchableHighlight,
+ImageBackground,
   TouchableOpacity,
   View,
+    Share,
 } from 'react-native';
+import * as Font from 'expo-font';
 import SvgUri from 'react-native-svg-uri';
+import {updateUserinfo} from '../redux/profileReducer'
+import NavBar from '../components/NavBar';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+
 
 
 class ProfileScreen extends Component {
@@ -27,17 +35,33 @@ class ProfileScreen extends Component {
   };
   state = {
     search: '',
+      tub3: true,
       notif: true,
+      image: null,
       TextInputNameDiss: false,
       c: false,
       TextInputPhoneDiss: false,
-      name: 'Владислав Вонсович',
-      email: 'vlad.vonsovych88@gmail.com',
-      phone: '+44 (555) 55-33',
+      name: '',
+      email: '',
+      phone: '',
+        fontLoaded: false,
   };
 
-
-
+    async componentDidMount() {
+        await Font.loadAsync({
+            'Gilroy-Regular': require('../assets/fonts/Gilroy-Regular.ttf')
+        });
+    
+        this.setState({fontLoaded: true });
+    }
+componentWillReceiveProps(nextProps){
+    console.log(nextProps, 'nextProps')
+  if(nextProps.userinfo.userinfo!==this.props.userinfo.userInfo){
+    this.setState({ phone:  nextProps.userinfo.userinfo.info.phone == null ? '' : nextProps.userinfo.userinfo.info.phone })
+    this.setState({ name: nextProps.userinfo.userinfo.info.name == null ? '' : nextProps.userinfo.userinfo.info.name })
+    this.setState({ email: nextProps.userinfo.userinfo.info.email })
+  }
+}
  onCloseNotif = () =>
   {
      this.setState({ notif: false })
@@ -52,28 +76,85 @@ class ProfileScreen extends Component {
    
   this.state.TextInputEmailDiss ?  this.setState({ TextInputEmailDiss: false })   : this.setState({ TextInputEmailDiss: true })  
 }  
-  onPressEditButtonPhone = () => {  
-     this.state.TextInputPhoneDiss ?  this.setState({ TextInputPhoneDiss: false })   : this.setState({ TextInputPhoneDiss: true })  
+ onPressEditButtonPhone = () => {  
+      console.log( this.props.phone.phone.token.token,
+         this.state.name,
+         this.state.email,
+         this.state.phone, 'wtf')
+      let name = this.state.name == 'null' || this.state.name == null ? 'Your Name' : this.state.name
+      let email = this.state.email == 'null' || this.state.email == null ? 'Your Email' : this.state.email
+     this.state.TextInputPhoneDiss ?  
+         this.setState({ TextInputPhoneDiss: false })
 
+     : this.setState({ TextInputPhoneDiss: true })  
+     this.props.updateUserinfo(
+     this.props.phone.phone.token.token,
+          name,
+          email,
+         this.state.phone)
 }  
-   onGetSpots = () =>
+ onGetSpots = () =>
   {
      
      this.props.navigation.navigate('ProfileGet');
      
   }
-      onSaveSpots = () =>
+ onSaveSpots = () =>
   {
      
      this.props.navigation.navigate('ProfileSave');
      
   }
+     
+ onAchievements = () =>
+  {
+     
+     this.props.navigation.navigate('achievementsScreen');
+     
+  }
+
+pickImage = async () => {
+       await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
+  onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: 'Привет.Заходи ко мне в приложения http://spot43.ru/',
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   render() {
-      console.log(this.props, 'studiosprops')
+      console.log(this.props,this.props.userinfo.userinfo, 'Profileprops')
       const { search,  } = this.state;
   
       
-       return (
+       return (<> 
+                {this.state.fontLoaded  ? 
             
   <ImageBackground
         style={styles.container}
@@ -83,32 +164,38 @@ class ProfileScreen extends Component {
  <ScrollView  style={styles.containerscrl} >
      <View style={styles.container1}>
           <View style={styles.header}> 
-              <View style={styles.arrowleft}>
+              <TouchableOpacity style={styles.arrowleft}    onPress={() => this.props.navigation.navigate('Four')}>
                  <Icon
-                    onPress={() => this.props.navigation.navigate('Four')}
+                 
                     name='chevron-left'
                     size = {20}
                     color='#fff'
                 />
             <Text style={styles.text}>Мой профиль</Text>
-            </View>
+            </TouchableOpacity>
   
             <View style={styles.headericon}>
+                 <TouchableOpacity onPress={this.onShare}>
                     <Text style={styles.headersingleicon}>
+                        
                          <Icon
 
                             name='bell'
                             size = {25}
                             color='#fff'
                         />
+                                
                     </Text>
+ </TouchableOpacity>
                     <View>
+                                <TouchableOpacity onPress={this.onShare}>
                        <SvgUri 
 
                             width="25" 
                             height="25" 
                             source={require('../assets/images/profileflt.svg')}
                     />
+                                     </TouchableOpacity>
                     </View>
     
         
@@ -116,23 +203,25 @@ class ProfileScreen extends Component {
         
           </View>
            <View style={styles.profileImage}>
-                                
+                      <TouchableOpacity onPress={this.pickImage }>          
                    <Image
+
           style={{width: 120, height: 120, borderRadius: 100}}
-          source={require('../assets/images/Profile.png')}
+         
+           source={this.state.image !== null ? { uri: this.state.image } : require('../assets/images/title.png')}
         />              
                                 
-                                
+               </TouchableOpacity >                   
            </View>
          <View style={styles.prosfilenamewrap}>
          
-                  <Text style={styles.prosfilename}>Владислав Вонсович</Text>
+                  <Text style={styles.prosfilename}>{this.state.name }</Text>
 
         
             </View>
- <View style={styles.wrap}>
+
            {this.state.notif ?  
-               
+                <View style={styles.wrap}>
                <View style={styles.freespotswrap}> 
                <View style={styles.freespots}> 
                       
@@ -149,8 +238,8 @@ class ProfileScreen extends Component {
                         />
                   </TouchableOpacity>
               </View>
-              </View> : <Text> </Text>}
-              </View>  
+              </View></View>   : null}
+              
            <View style={styles.infowrap}> 
                <View style={styles.info}> 
                <Text style={styles.prosfileh2}>Личная информация </Text>
@@ -158,7 +247,7 @@ class ProfileScreen extends Component {
                 <TextInput
                       style={{height: 40, fontSize: 14,   borderBottomWidth: 1,  borderRadius: 10, paddingLeft: 10,  borderColor: this.state.TextInputNameDiss ? '#FFF' : '#e6e6e6' , width: '85%' , backgroundColor: this.state.TextInputNameDiss ? '#FFF5EA' : '#FFF' }}
                       
-                      onChangeText={(text) => this.setState({name})}
+                      onChangeText={(name) => this.setState({name})}
                       editable={this.state.TextInputNameDiss} 
                       value={this.state.name}
                 />
@@ -175,7 +264,7 @@ class ProfileScreen extends Component {
                 <TextInput
                       style={{height: 40, fontSize: 14,   borderBottomWidth: 1,  borderRadius: 10, paddingLeft: 10,  borderColor: this.state.TextInputEmailDiss ? '#FFF' : '#e6e6e6' , width: '85%' , backgroundColor: this.state.TextInputEmailDiss ? '#FFF5EA' : '#FFF' }}
                       
-                      onChangeText={(text) => this.setState({email})}
+                      onChangeText={(email) => this.setState({email})}
                       editable={this.state.TextInputEmailDiss} 
                       value={this.state.email}
                 />
@@ -193,7 +282,7 @@ class ProfileScreen extends Component {
                 <TextInput
                       style={{height: 40, fontSize: 14,   borderBottomWidth: 1,  borderRadius: 10, paddingLeft: 10,  borderColor: this.state.TextInputPhoneDiss ? '#FFF' : '#e6e6e6' , width: '85%' , backgroundColor: this.state.TextInputPhoneDiss ? '#FFF5EA' : '#FFF' }}
                       
-                      onChangeText={(text) => this.setState({text})}
+                      onChangeText={(phone) => this.setState({phone})}
                       editable={this.state.TextInputPhoneDiss} 
                       value={this.state.phone}
                 />
@@ -230,7 +319,7 @@ class ProfileScreen extends Component {
           
                 <TouchableOpacity onPress={this.onSaveSpots} >
                      <View style={styles.inputwrapspot} >
-                      <Text style={styles.textspot}>Как накопить споты?</Text>
+                      <Text>Как накопить споты?</Text>
                     <Icon
                     onPress={() => this.props.navigation.navigate('Four')}
                     name='chevron-right'
@@ -243,17 +332,7 @@ class ProfileScreen extends Component {
        
           
               
-                <TouchableOpacity onPress={this.onPressEditButtonPhone} >
-                     <View style={styles.inputwrapspot} >
-                      <Text>Мои достижения</Text>
-                    <Icon
-                    onPress={() => this.props.navigation.navigate('Four')}
-                    name='chevron-right'
-                    size = {20}
-                    color='#0B1100'
-                />
-                           </View>
-                </TouchableOpacity>
+               
         
                     </View>
               </View>
@@ -262,29 +341,30 @@ class ProfileScreen extends Component {
                      
          
              
-                <TouchableOpacity onPress={this.onPressEditButton} >
+                <TouchableOpacity onPress={()=>{ 
+  Linking.openURL('mailto:hello@spot43.ru ');
+                            }} >
                       <View style={styles.inputwrapspot} >
                       <Text>Поддержка</Text>
-                    <SvgUri 
-
-                            width="20" 
-                            height="20" 
-                            source={require('../assets/images/setting.svg')}
+                    <Icon
+                    onPress={() => this.props.navigation.navigate('Four')}
+                    name='cog'
+                    size = {20}
                     />
                      </View>   
                 </TouchableOpacity>
            
         
          
-                <TouchableOpacity onPress={this.onPressEditButtonEmail} >
+                <TouchableOpacity onPress={this.onPressEditButtonEmail}  onPress={() => Linking.openURL('https://instagram.com/spot43app?igshid=houi8uy7qj31')}>
                                    <View style={styles.inputwrapspot} >
                        <Text style={styles.textgreen}>Ссылка на инстаграм</Text>
-                   <SvgUri 
-
-                            width="20" 
-                            height="20" 
-                            source={require('../assets/images/instagram.svg')}
-                    />
+                    <Icon
+                    onPress={() => this.props.navigation.navigate('Four')}
+                    name='instagram'
+                    size = {20}
+                    color='#0B1100'
+                />
                                         </View>
                 </TouchableOpacity>
        
@@ -294,7 +374,7 @@ class ProfileScreen extends Component {
               </View>   
               
             <View style={styles.footerwrap}> 
-                 <TouchableOpacity  style={styles.footerinfo} onPress={this.onPressEditButtonEmail} >
+                 <TouchableOpacity  style={styles.footerinfo} >
                
                          <Text style={styles.textgreen}>Настройка конфиденциальности </Text>   
                   </TouchableOpacity>
@@ -303,8 +383,10 @@ class ProfileScreen extends Component {
               </View>
                  
  </ScrollView >
+    
           </ImageBackground >
-
+: null }
+</>
   ); 
   }
 
@@ -314,14 +396,14 @@ class ProfileScreen extends Component {
 const mapStateToProps = state => {
   return {
       phone: state.phone,
-    
+        userinfo: state.userinfo
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    getStudio: (token) => {
-    
+    updateUserinfo: (token,name,email,phone) => {
+    dispatch(updateUserinfo(token,name,email,phone))
     }
       
   }
@@ -348,16 +430,16 @@ const styles = StyleSheet.create({
  textAlign: 'center',
        flex: 1,
   justifyContent: 'space-between',
-     
-   
   },
  
      textspot: {
-         fontSize: 12
+         fontSize: 12,
+         fontFamily: 'Gilroy-Regular',
      },
     text: {
       color: "#fff",
         fontSize: 18,
+        fontFamily: 'Gilroy-Regular',
         textAlign: 'center',
         left: 10
     },
@@ -416,12 +498,13 @@ const styles = StyleSheet.create({
      prosfilenamewrap: {
           flex: 0.2,
         height: 40,
-   
+    fontFamily: 'Gilroy-Regular',
         justifyContent: 'center',
             bottom: 20,
           top: 30,
      },
     prosfilename: {
+        fontFamily: 'Gilroy-Regular',
         textAlign: 'center',
         fontWeight: '600',
     fontSize: 30,
@@ -457,6 +540,7 @@ const styles = StyleSheet.create({
     freespotstext: {
         width: '60%',
         lineHeight: 12,
+        fontFamily: 'Gilroy-Regular',
         fontSize: 9,
     },
     prosfileh2: {

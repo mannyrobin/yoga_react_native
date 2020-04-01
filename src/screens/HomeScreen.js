@@ -39,10 +39,17 @@ class HomeScreen extends Component {
           <View 
  style={styles.shadow}
 />
+     <Text style={styles.text}>  
+     Привет! 
+     </Text>
+ <Text style={styles.text}>  
+    Тебя ждут самые лучшие
+     </Text>
           <Text
-style={styles.text}
->Привет! Тебя ждут самые лучшие
-спортивные бьюти точки города</Text>
+style={styles.text}>
+ 
+
+места спорта и красоты в городе.</Text>
 
   <TouchableOpacity 
 
@@ -69,12 +76,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
       authbutton: {
-          width: 200,
+          width: 300,
          textAlign: 'center',
            display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-          marginTop: 40,
+          marginTop: 30,
           height: 44,
       borderRadius: 100,
           letterSpacing: 0.05,
@@ -84,6 +91,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#646F4F'
    },
     text: {
+        
       color: "#fff",
         fontSize: 18,
         textAlign: 'center',
@@ -96,7 +104,7 @@ const styles = StyleSheet.create({
     shadow: {
          position: 'absolute',
         backgroundColor: '#040404',
-        opacity: 0.65,
+        opacity: 0.5,
         left: 0,
         top: 0,
      width: "100%",

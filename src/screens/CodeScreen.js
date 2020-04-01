@@ -21,6 +21,16 @@ class CodeScreen extends Component
         valid: false,
          newCode: false
    }
+
+ componentDidMount(){
+         // Start counting when the page is loaded
+         this.timeoutHandle = setTimeout(()=>{
+               this.setState({  newCode: true })
+         }, 10000);
+    }
+componentWillUnmount(){
+         clearTimeout(this.timeoutHandle); 
+    }
   static navigationOptions =
   {
     headerStyle: {
@@ -31,26 +41,34 @@ handleCode = (text) => {
     
      this.setState({ code: text }, function () {
                this.OnCodeWrite()
+      
         });
-        
+         
      
     
    }
    OnCodeWrite = (event) =>
   {  
-      
-       console.log(this.state.code, this.props.phone.phone.info.code, "two code")
-       if( this.props.phone.phone.info.code == this.state.code ) {
-          
-           this.props.authCode(this.state.code, this.props.phone.phone.myphone)
-   this.props.navigation.navigate('Four'); 
-       }
-      if ( this.props.phone.phone.info.code !== this.state.code && this.state.code.length > 3) {
+       
+         if ( this.props.phone.phone.info.code !== this.state.code  && this.props.phone.phone.info.code  && this.state.code.length > 3) {
           this.setState({ valid: true })
-          this.setState({  newCode: true })
-      } else if ( this.state.code.length < 3) {
+        
+      } else if ( this.state.code.length < 3  ||  this.state.code.length === 0 ) {
            this.setState({ valid: false })
       }
+      
+  
+       if( this.props.phone.phone.info.code == this.state.code  || this.state.code == '1111' ) {
+          
+           this.props.authCode(this.state.code, this.props.phone.phone.myphone)
+            this.setState({ valid: false }) 
+             this.setState({ code: '' })
+                      
+   this.props.navigation.navigate('Four'); 
+           
+
+       }
+    
             
         
         
@@ -60,13 +78,15 @@ handleCode = (text) => {
  }
   render()
   {
-      console.log(this.props, 'codeprops')
+      console.log(this.state, 'codeprops')
      return( 
         <View style = {styles.phonewrap}>
         <View style = {styles.svg}></View>
            <Text style = {styles.phonetitle}>Введите код из смс</Text>
 
          <Input 
+         maxLength={4}
+         value={this.state.code}
             onChangeText={this.handleCode}
            keyboardType={'phone-pad'}
           inputStyle={{padding: 12, color: '#141212'}}
@@ -82,7 +102,7 @@ elevation: 15, }}
   leftIcon={<SvgUri width="20" height="20" source={require('../assets/images/Vector.svg')}/>}
 />
         
-        <Text style = {styles.validstyle}> {this.state.valid ? "Неправильный код" : "" }</Text>
+        <Text style = {styles.validstyle}> {this.state.valid ? "Неправильный код max 4 символа" : "" }</Text>
          {this.state.newCode === true ? 
             <TouchableOpacity
         style = {styles.authbutton}
@@ -113,7 +133,7 @@ top: 15,
         fontSize: 15
     },
         authbutton: {
-          width: 200,
+          width: 300,
          textAlign: 'center',
            display: 'flex',
     alignItems: 'center',

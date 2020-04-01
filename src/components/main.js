@@ -5,6 +5,7 @@ import React, { useState , Component} from 'react';
 import { Platform, StatusBar, StyleSheet, View , Text,Button} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen'
+import NavBar from './NavBar'
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import PhoneScreen from '../screens/PhoneScreen'
@@ -12,8 +13,14 @@ import CodeScreen from '../screens/CodeScreen'
 import StudiesScreen from '../screens/StudiesScreen'
 import SingleStudio from '../screens/SingleStudio'
 import ProfileScreen from '../screens/ProfileScreen'
+import SortScreen from '../screens/SortScreen'
 import ProfileScreenGet from '../screens/ProfileScreenGet'
+import ReviewScreen from '../screens/ReviewScreen'
 import ProfileScreenSave from '../screens/ProfileScreenSave'
+import achievementsScreen from '../screens/achievementsScreen'
+import MapScreen from '../screens/MapContainer'
+
+
 
 
 
@@ -45,15 +52,20 @@ function Main(props) {
  
  const Project = createStackNavigator(
 {
- First: { screen: ProfileScreenSave  },
+ First: { screen:  HomeScreen },
+ MapScreen: { screen: MapScreen  },
+ SortScreen: { screen: SortScreen  },
+ ReviewScreen: { screen: ReviewScreen  },
  
  Second: { screen: PhoneScreen },
  Three: { screen: CodeScreen },
+ NavBar: { screen: NavBar },
     Four: { screen: StudiesScreen },
     Five: { screen: SingleStudio },
     Profile: { screen: ProfileScreen },
      ProfileGet: { screen: ProfileScreenGet },
      ProfileSave: { screen: ProfileScreenSave },
+     achievementsScreen: { screen: achievementsScreen },
 });
  
 const AppContainer = createAppContainer(Project);

@@ -20,6 +20,7 @@ import { MonoText, } from '../components/StyledText';
 import { SearchBar } from 'react-native-elements';
 import SvgUri from 'react-native-svg-uri';
 import {getStudios} from '../redux/studioReducer'
+import {getReview} from '../redux/ReviewReducer'
 
 
 class MiniStudio extends Component {
@@ -39,6 +40,7 @@ class MiniStudio extends Component {
  OnStudioPress = () =>
   {
      this.props.getSingleStudio(this.props.phone.phone.token.token, this.props.id)
+     this.props.getReview(this.props.phone.phone.token.token, this.props.id)
      this.props.navigation.navigate('Five');
      
   }
@@ -52,7 +54,7 @@ class MiniStudio extends Component {
  }
  
   render() {
-      console.log(this.props, 'studiomini')
+//      console.log(this.props, 'studiomini')
       const { search,  } = this.state;
   
       
@@ -61,8 +63,8 @@ class MiniStudio extends Component {
          <View style={styles.image} >
     
     <Image
-          style={{width: 80, height: 90}}
-          source={require('../assets/images/s1.png')}
+          style={{width: 100, height: 100}}
+          source={require('../assets/images/title.png')}
         />
           </View>
                   
@@ -77,31 +79,31 @@ style={styles.textstudio}>
    <Text> 
         Расстояние от вас - 2.0км
         </Text>  
-  <View style={styles.iconstar}> 
+
+
+<View style={styles.footer}> 
+              <View style={styles.iconstar}> 
       <Icon
           name='star'
           size = {15}
-          color='#F8C81F' />
+          color='#646F4F' />
                <Icon
           name='star'
           size = {15}
-          color='#F8C81F' />
+          color='#646F4F' />
                <Icon
           name='star'
           size = {15}
-          color='#F8C81F' />
+          color='#646F4F' />
                <Icon
           name='star'
           size = {15}
-          color='#F8C81F' />
+          color='#646F4F' />
                <Icon
           name='star'
           size = {15}
-          color='#F8C81F' />
+          color='#646F4F' />
         </View> 
-
-<View style={styles.footer}> 
-            
                {this.state.like ?   <Icon
           name='heart'
       onPress={this.likeColor}
@@ -126,6 +128,7 @@ style={styles.textstudio}>
 const mapStateToProps = state => {
   return {
       phone: state.phone,
+      review: state.review,
    
   }
 }
@@ -134,6 +137,9 @@ const mapDispatchToProps = dispatch => {
   return {
     getSingleStudio: (token,id) => {
       dispatch(getSingleStudios(token, id))
+    } ,
+      getReview: (token,id) => {
+      dispatch(getReview(token, id))
     }
       
   }
@@ -251,7 +257,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     },
      iconstar: {
-       top: 10,
        width: '60%',
          flexDirection: 'row',
            justifyContent: 'space-between',
@@ -261,7 +266,8 @@ const styles = StyleSheet.create({
        top: 20,
            paddingBottom: 20,   
            color: 'grey',
-       justifyContent: 'flex-end',
+            justifyContent: 'space-between',
+             alignItems: 'center',
        flexDirection: 'row',
       
         

@@ -16,7 +16,9 @@ import {getPhone} from '../redux/authReducer'
 class PhoneScreen extends Component
 {
        state = {
-      phone: ''
+      phone: '+7',
+           value:'',
+           disable: false
    }
   static navigationOptions =
   {  
@@ -29,10 +31,18 @@ class PhoneScreen extends Component
    OnSigninPress = () =>
   {
          if(this.state.phone.length === 12) {
-             
+          
         this.props.add(this.state.phone)
-     this.props.navigation.navigate('Three'); }
-     
+     this.props.navigation.navigate('Three');
+         
+             this.timeoutHandle = setTimeout(()=>{
+                  this.setState({ disable:  true }) 
+         }, 2000);
+                console.log(this.state.disable ,'disable')
+            
+         }
+       
+   
   }
    handleCode = (text) => {
 
@@ -43,8 +53,9 @@ class PhoneScreen extends Component
      
     
    }
+   
   render()
-
+    
   {
      
      return(
@@ -53,10 +64,11 @@ class PhoneScreen extends Component
            <Text style = {styles.phonetitle}>Введите номер телефона</Text>
 
          <Input 
+         maxLength={12}
            onChangeText={this.handleCode}
-        defaultValue={'+7'}
+         disabled={this.state.disable}
          keyboardType={'phone-pad'}
-         
+         value={this.state.phone}
           inputStyle={{padding: 12, color: '#141212', }}
           inputContainerStyle={{backgroundColor: '#FFE4C7', borderRadius: 50,borderBottomWidth: 0,shadowColor: "#EBC49A",
 shadowOffset: {
@@ -72,7 +84,22 @@ elevation: 15,
   leftIcon={{ type: 'font-awesome', name: 'mobile',color: '#203200' }}
 />
        
-        
+        {this.state.disable ? <View style = {styles.buttonwrap}>
+            <TouchableOpacity
+        style = {styles.authbutton}
+         onPress={() => this.props.navigation.navigate('Three')}
+       >
+       <Text style = {styles.buttontext}>Ввести код</Text>
+       </TouchableOpacity> 
+       
+        <TouchableOpacity
+        style = {styles.authbutton}
+         onPress={() => this.setState({disable:  false})}
+       >
+       <Text style = {styles.buttontext}>Изменить номер</Text>
+       </TouchableOpacity></View>
+       : null
+         }
 
      
         </View>
@@ -96,18 +123,25 @@ const styles = StyleSheet.create({
       fontWeight: '600',
       textTransform: 'uppercase'
   },
+    buttonwrap: {
+        padding: 10,
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
      authbutton: {
-          width: 200,
+          width: 150,
          textAlign: 'center',
            display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-          marginTop: 40,
+          marginTop: 20,
           height: 44,
       borderRadius: 100,
           letterSpacing: 0.05,
           fontSize: 14,
-      padding: 25,
+      padding: 15,
       backgroundColor: '#646F4F'
    },
     buttontext: {

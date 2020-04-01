@@ -17,6 +17,8 @@ import {
   View,
 } from 'react-native';
 import SvgUri from 'react-native-svg-uri';
+import * as Font from 'expo-font';
+import NavBar from '../components/NavBar';
 
 
 class ProfileScreenGet extends Component {
@@ -33,13 +35,20 @@ class ProfileScreenGet extends Component {
       TextInputMoscowDiss: false,
       TextInputinDiss: false,
       TextInputPromoDiss: false,
-      
-     
-     
+      tub3: true,
+     fontLoaded: false,
   };
 
 
 
+    async componentDidMount() {
+        await Font.loadAsync({
+            'Gilroy-Regular': require('../assets/fonts/Gilroy-Regular.ttf'),
+            'Gilroy-Bold': require('../assets/fonts/gilroy-extrabold.ttf')
+        });
+    
+        this.setState({fontLoaded: true });
+    }
  onCloseNotif = () =>
   {
      this.setState({ notif: false })
@@ -68,7 +77,8 @@ class ProfileScreenGet extends Component {
   
       
        return (
-            
+                <> 
+                {this.state.fontLoaded  ? 
   <ImageBackground
         style={styles.container}
         source={require('../assets/images/studio.png')}
@@ -110,7 +120,7 @@ class ProfileScreenGet extends Component {
                     color='#646F4F'
                 />  }
                      
-                          <Text style={styles.textgreenmargin}>Скрыть описание </Text>
+                          <Text style={styles.textgreenmargin}>{this.state.TextInputYogaDiss ? 'Скрыть описание ' : 'Показать Описание'}</Text>
 
                         </TouchableOpacity>
                 {this.state.TextInputYogaDiss ?    <View style={styles.showblock} >
@@ -159,8 +169,8 @@ class ProfileScreenGet extends Component {
                
                <View style={styles.info}> 
                    <View style={styles.inputwrap} >
-                        <Text style={styles.prosfileh2}>Йога-фотосессия </Text>
-                        <Text style={styles.greentext}> 20 спотов</Text>
+                        <Text style={styles.prosfileh2}>Москва-Сити </Text>
+                        <Text style={styles.greentext}> 50 спотов</Text>
            
                         <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.onShowMoscowButton} >
                               {this.state.TextInputMoscowDiss ?           <Icon
@@ -177,7 +187,7 @@ class ProfileScreenGet extends Component {
                     color='#646F4F'
                 />  }
                      
-                          <Text style={styles.textgreenmargin}>Скрыть описание </Text>
+                          <Text style={styles.textgreenmargin}>{this.state.TextInputMoscowDiss ? 'Скрыть описание ' : 'Показать Описание'}</Text>
 
                         </TouchableOpacity>
                 {this.state.TextInputMoscowDiss ?    <View style={styles.showblock} >
@@ -186,7 +196,7 @@ class ProfileScreenGet extends Component {
  <TouchableOpacity   onPress={() => Linking.openURL('http://google.com')} >
                             <Text style={styles.textgreen}>Сайт партнера </Text>      
     </TouchableOpacity>
-                            <View style={{flexDirection: 'row'}}    >
+                            <View style={{flexDirection: 'row', marginTop: 10}}    >
                                 
                               
                               <Icon
@@ -225,10 +235,10 @@ class ProfileScreenGet extends Component {
                
                <View style={styles.info}> 
                    <View style={styles.inputwrap} >
-                        <Text style={styles.prosfileh2}>Йога-фотосессия </Text>
-                        <Text style={styles.greentext}> 20 спотов</Text>
+                        <Text style={styles.prosfileh2}>Инь-йога</Text>
+                        <Text style={styles.greentext}> 35 спотов</Text>
            
-                        <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.onShowInButton} >
+                        <TouchableOpacity style={{flexDirection: 'row', marginTop: 10}} onPress={this.onShowInButton} >
                               {this.state.TextInputinDiss ?           <Icon
                  
                     name='chevron-up'
@@ -243,7 +253,7 @@ class ProfileScreenGet extends Component {
                     color='#646F4F'
                 />  }
                      
-                          <Text style={styles.textgreenmargin}>Скрыть описание </Text>
+                          <Text style={styles.textgreenmargin}>{this.state.TextInputinDiss ? 'Скрыть описание ' : 'Показать Описание'}</Text>
 
                         </TouchableOpacity>
                 {this.state.TextInputinDiss ?    <View style={styles.showblock} >
@@ -292,11 +302,12 @@ class ProfileScreenGet extends Component {
                     <View style={styles.infowrap}> 
                
                <View style={styles.info}> 
-                   <View style={styles.inputwrap} >
-                        <Text style={styles.prosfileh2}>Йога-фотосессия </Text>
-                        <Text style={styles.greentext}> 20 спотов</Text>
+                   <View style={styles.inputwrapLast} >
+                        <Text style={styles.prosfileh2}>20% промокод
+на массаж</Text>
+                        <Text style={styles.greentext}> 35 спотов</Text>
            
-                        <TouchableOpacity style={{flexDirection: 'row'}} onPress={this.onShowPromoButton} >
+                        <TouchableOpacity style={{flexDirection: 'row', marginTop: 10 }} onPress={this.onShowPromoButton} >
                               {this.state.TextInputPromoDiss?           <Icon
                  
                     name='chevron-up'
@@ -311,7 +322,7 @@ class ProfileScreenGet extends Component {
                     color='#646F4F'
                 />  }
                      
-                          <Text style={styles.textgreenmargin}>Скрыть описание </Text>
+                          <Text style={styles.textgreenmargin}>{this.state.TextInputPromoDiss ? 'Скрыть описание ' : 'Показать Описание'}</Text>
 
                         </TouchableOpacity>
                 {this.state.TextInputPromoDiss ?    <View style={styles.showblock} >
@@ -358,8 +369,10 @@ class ProfileScreenGet extends Component {
               </View>
                  
  </ScrollView >
+       
           </ImageBackground >
-
+: null }
+</>
   ); 
   }
 
@@ -387,7 +400,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreenGet)
 const styles = StyleSheet.create({
   container: {
  paddingTop: 10,
-  
+   fontFamily: 'Gilroy-Regular',
  textAlign: 'center',
        flex: 1,
   justifyContent: 'space-between',
@@ -397,7 +410,7 @@ const styles = StyleSheet.create({
     textheader: {
         color: "#fff",
         fontSize: 17,
-        fontWeight: '600',
+        fontFamily: 'Gilroy-Bold',
         paddingLeft: 15
     } ,
     textmargin: {
@@ -407,16 +420,17 @@ const styles = StyleSheet.create({
       
         fontSize: 16,
         marginBottom: 11,
-        fontWeight: '600',
+       fontFamily: 'Gilroy-Bold',
       color: '#BABF97'  
     },
      textgreenmargin: {
-       
+       fontFamily: 'Gilroy-Regular',
              marginBottom: 10,
       color: '#646F4F'  ,
           left: 10 
      },
     textgreen: {
+        fontFamily: 'Gilroy-Regular',
           marginBottom: 10,
       color: '#646F4F'  
     },
@@ -434,7 +448,7 @@ showblock: {
   },
  spotbutton: {
           width: 165,
-        
+        fontFamily: 'Gilroy-Regular',
            display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -448,13 +462,14 @@ showblock: {
       backgroundColor: '#646F4F'
    },
      textspot: {
+         fontFamily: 'Gilroy-Regular',
          fontSize: 12
      },
     text: {
       color: "#fff",
         fontSize: 12,
         textAlign: 'center',
-        
+        fontFamily: 'Gilroy-Regular',
     },
     headersingleicon: {
       marginRight: 25,  
@@ -494,7 +509,7 @@ showblock: {
        top: 10,
        width: '90%',
         paddingLeft: 20,
-       
+       fontFamily: 'Gilroy-Regular',
         flexDirection: 'row',
         justifyContent: 'space-between',
          alignItems: 'center',
@@ -507,7 +522,7 @@ showblock: {
     prosfileh2: {
         marginBottom: 10,
            fontSize: 20,
-        fontWeight: '600',  
+        fontFamily: 'Gilroy-Bold',
     },
     infowrap: {
         top: 50,
@@ -544,10 +559,15 @@ elevation: 15,
 
 inputwrap: {
     width: '60%',
-    paddingBottom: 15,
+    paddingBottom: 10,
      marginTop: 10 ,
       alignItems: 'flex-start',
 },
-
-   
+inputwrapLast
+   : {
+    width: '60%',
+    paddingBottom: 0,
+     marginTop: 10 ,
+      alignItems: 'flex-start',
+},
 });
